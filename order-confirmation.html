@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Order Confirmed – Umisha Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--rose:#b05570;--rose-light:#c97a92;--rose-pale:#f2dde3;--rose-blush:#e8c4d0;--cream:#f7f0ec;--dark:#2a1a1f;--text:#4a2f38;--text-light:#8a6570;--white:#fff;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+nav{background:var(--rose);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-brand{font-family:'Playfair Display',serif;font-style:italic;color:var(--white);font-size:20px}
+.nav-link{color:rgba(255,255,255,0.88);font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;text-decoration:none}
+.main{flex:1;display:flex;align-items:center;justify-content:center;padding:60px 20px}
+.confirm-card{background:var(--white);border-radius:28px;padding:52px 48px;max-width:580px;width:100%;text-align:center;box-shadow:0 8px 48px rgba(176,85,112,0.15)}
+.confirm-icon{width:80px;height:80px;background:var(--rose-pale);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 24px}
+.confirm-title{font-family:'Playfair Display',serif;font-size:32px;color:var(--dark);margin-bottom:8px}
+.confirm-sub{color:var(--text-light);font-size:15px;margin-bottom:28px;line-height:1.6}
+.order-detail{background:var(--rose-pale);border-radius:16px;padding:20px 24px;margin-bottom:20px;text-align:left}
+.order-detail-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}
+.order-detail-row:not(:last-child){border-bottom:1px solid var(--rose-blush)}
+.order-detail-row span:first-child{color:var(--text-light)}
+.order-detail-row span:last-child{font-weight:500;color:var(--dark)}
+.order-number{font-family:'Playfair Display',serif;color:var(--rose);font-size:20px}
+.delivery-badge{display:inline-block;background:var(--rose);color:var(--white);padding:5px 14px;border-radius:20px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px}
+.progress-steps{display:flex;align-items:center;justify-content:center;gap:0;margin:24px 0}
+.step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+.step-dot{width:28px;height:28px;border-radius:50%;background:var(--rose);display:flex;align-items:center;justify-content:center;color:white;font-size:12px;font-weight:600;position:relative;z-index:1}
+.step-dot.pending{background:var(--rose-blush);color:var(--text-light)}
+.step-line{flex:1;height:2px;background:var(--rose-blush);margin-top:-14px;position:relative;z-index:0}
+.step-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-light);text-align:center;margin-top:2px}
+.btn-primary{display:inline-block;background:var(--rose);color:var(--white);padding:13px 32px;border-radius:12px;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;text-decoration:none;margin:6px;transition:all .2s}
+.btn-primary:hover{background:var(--rose-light);transform:translateY(-1px)}
+.btn-outline{display:inline-block;border:1.5px solid var(--rose);color:var(--rose);padding:12px 32px;border-radius:12px;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;text-decoration:none;margin:6px;transition:all .2s}
+.btn-outline:hover{background:var(--rose-pale)}
+footer{background:var(--dark);color:rgba(255,255,255,0.6);text-align:center;padding:24px;font-size:12px;letter-spacing:1px}
+</style>
+</head>
+<body>
+<nav>
+  <span class="nav-brand">Umisha Studio</span>
+  <a href="/" class="nav-link">← Back to Shop</a>
+</nav>
+<main class="main">
+  <div class="confirm-card">
+    <!-- <div class="confirm-icon">🌸</div> -->
+    <div class="confirm-title">Order Confirmed!</div>
+    <p class="confirm-sub">Thank you for your order. Your handcrafted items are being prepared with love.</p>
+    <div class="delivery-badge"> Estimated delivery: 5–7 days</div>
+    <div class="order-detail" id="orderDetail">
+      <div class="order-detail-row"><span>Order Number</span><span class="order-number" id="orderNum">–</span></div>
+      <div class="order-detail-row"><span>Email</span><span id="orderEmail">–</span></div>
+      <div class="order-detail-row"><span>Status</span><span style="color:var(--rose);font-weight:500"> Pending</span></div>
+      <div class="order-detail-row"><span>Estimated Delivery</span><span id="orderDelivery">–</span></div>
+    </div>
+    <div class="progress-steps">
+      <div class="step">
+        <div class="step-dot">✓</div>
+        <div class="step-label">Confirmed</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-dot pending"></div>
+        <div class="step-label">Processing</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-dot pending"></div>
+        <div class="step-label">Shipped</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-dot pending"></div>
+        <div class="step-label">Delivered</div>
+      </div>
+    </div>
+    <div style="margin-top:8px">
+      <a href="/track-order" class="btn-primary">Track My Order</a>
+      <a href="/" class="btn-outline">Continue Shopping</a>
+    </div>
+  </div>
+</main>
+<footer>Umisha Studio · Handcrafted with love</footer>
+<script>
+const params = new URLSearchParams(window.location.search);
+const order = params.get('order');
+const email = params.get('email');
+if (order) document.getElementById('orderNum').textContent = order;
+if (email) document.getElementById('orderEmail').textContent = email;
+const last = JSON.parse(localStorage.getItem('last_order') || '{}');
+if (last.estimated_delivery) {
+  const d = new Date(last.estimated_delivery);
+  document.getElementById('orderDelivery').textContent = d.toLocaleDateString('en-PK', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+</script>
+</body>
+</html>

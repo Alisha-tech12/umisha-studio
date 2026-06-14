@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Track Your Order – Umisha Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--rose:#b05570;--rose-light:#c97a92;--rose-pale:#f2dde3;--rose-blush:#e8c4d0;--cream:#f7f0ec;--dark:#2a1a1f;--text:#4a2f38;--text-light:#8a6570;--white:#fff;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+nav{background:var(--rose);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-brand{font-family:'Playfair Display',serif;font-style:italic;color:var(--white);font-size:20px}
+.nav-link{color:rgba(255,255,255,0.88);font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;text-decoration:none}
+.hero-strip{background:repeating-linear-gradient(90deg,var(--rose) 0,var(--rose) 60px,var(--rose-pale) 60px,var(--rose-pale) 120px);height:8px}
+.main{flex:1;padding:60px 20px;max-width:680px;margin:0 auto;width:100%}
+h1{font-family:'Playfair Display',serif;font-size:36px;color:var(--dark);margin-bottom:8px;text-align:center}
+.page-sub{text-align:center;color:var(--text-light);margin-bottom:36px;font-size:14px}
+.track-form{background:var(--white);border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(176,85,112,0.1);margin-bottom:28px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-light);display:block;margin-bottom:6px}
+.form-input{width:100%;border:1.5px solid var(--rose-blush);border-radius:10px;padding:12px 14px;font-family:'Jost',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--rose)}
+.btn-track{width:100%;background:var(--rose);color:var(--white);border:none;padding:14px;border-radius:12px;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:4px}
+.btn-track:hover{background:var(--rose-light)}
+.result{display:none;background:var(--white);border-radius:20px;padding:28px;box-shadow:0 4px 24px rgba(176,85,112,0.1)}
+.result.show{display:block}
+.result-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.result-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--dark)}
+.status-badge{padding:6px 16px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase}
+.status-Pending{background:#fff3cd;color:#856404}
+.status-Processing{background:#cfe2ff;color:#0a58ca}
+.status-Shipped{background:#d1ecf1;color:#0c5460}
+.status-Delivered{background:#d4edda;color:#155724}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.detail-box{background:var(--rose-pale);border-radius:12px;padding:14px}
+.detail-box-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-light);margin-bottom:4px}
+.detail-box-value{font-size:14px;font-weight:500;color:var(--dark)}
+.progress-track{margin:20px 0}
+.progress-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-light);margin-bottom:14px}
+.steps{display:flex;align-items:center}
+.step{display:flex;flex-direction:column;align-items:center;flex:1;gap:4px}
+.step-dot{width:32px;height:32px;border-radius:50%;background:var(--rose-blush);display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;z-index:1;transition:all .3s}
+.step-dot.done{background:var(--rose);color:white}
+.step-dot.active{background:var(--rose-light);color:white;box-shadow:0 0 0 4px var(--rose-pale)}
+.step-connector{flex:1;height:2px;background:var(--rose-blush);margin-top:-16px;z-index:0;transition:background .3s}
+.step-connector.done{background:var(--rose)}
+.step-name{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);text-align:center}
+.items-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-light);margin-bottom:10px;margin-top:20px}
+.order-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--rose-pale);font-size:13px}
+.order-item:last-child{border:none}
+.error-msg{background:#fff0f3;border:1.5px solid var(--rose-blush);color:var(--rose);border-radius:10px;padding:14px;text-align:center;font-size:13px;display:none}
+.error-msg.show{display:block}
+footer{background:var(--dark);color:rgba(255,255,255,0.6);text-align:center;padding:24px;font-size:12px}
+@media(max-width:500px){.detail-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <span class="nav-brand">Umisha Studio</span>
+  <a href="/" class="nav-link">← Back to Shop</a>
+</nav>
+<div class="hero-strip"></div>
+<main class="main">
+  <h1>Track Your Order</h1>
+  <p class="page-sub">Enter your order number and email to see the latest status</p>
+
+  <div class="track-form">
+    <div class="form-group">
+      <label class="form-label">Order Number</label>
+      <input class="form-input" id="orderNum" placeholder="e.g. UMI-1234567890-123"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input class="form-input" id="orderEmail" type="email" placeholder="your@email.com"/>
+    </div>
+    <button class="btn-track" onclick="trackOrder()">Track My Order →</button>
+  </div>
+
+  <div class="error-msg" id="errorMsg">⚠️ Order not found. Please check your order number and email.</div>
+
+  <div class="result" id="result">
+    <div class="result-header">
+      <div>
+        <div style="font-size:11px;color:var(--text-light);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Order</div>
+        <div class="result-title" id="resOrderNum">–</div>
+      </div>
+      <div class="status-badge" id="resBadge">Pending</div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-box">
+        <div class="detail-box-label">Customer</div>
+        <div class="detail-box-value" id="resName">–</div>
+      </div>
+      <div class="detail-box">
+        <div class="detail-box-label">Order Date</div>
+        <div class="detail-box-value" id="resDate">–</div>
+      </div>
+      <div class="detail-box">
+        <div class="detail-box-label">Estimated Delivery</div>
+        <div class="detail-box-value" id="resDelivery">–</div>
+      </div>
+      <div class="detail-box">
+        <div class="detail-box-label">Total Amount</div>
+        <div class="detail-box-value" id="resTotal">–</div>
+      </div>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-title">Delivery Progress</div>
+      <div class="steps">
+        <div class="step" id="step0"><div class="step-dot" id="dot0">📋</div><div class="step-name">Confirmed</div></div>
+        <div class="step-connector" id="conn0"></div>
+        <div class="step" id="step1"><div class="step-dot" id="dot1">⚙️</div><div class="step-name">Processing</div></div>
+        <div class="step-connector" id="conn1"></div>
+        <div class="step" id="step2"><div class="step-dot" id="dot2">🚚</div><div class="step-name">Shipped</div></div>
+        <div class="step-connector" id="conn2"></div>
+        <div class="step" id="step3"><div class="step-dot" id="dot3">🏠</div><div class="step-name">Delivered</div></div>
+      </div>
+    </div>
+
+    <div class="items-title">Items in Your Order</div>
+    <div id="orderItems"></div>
+  </div>
+</main>
+<footer>Umisha Studio · Handcrafted with love</footer>
+<script>
+// Pre-fill from URL
+const params = new URLSearchParams(window.location.search);
+if (params.get('order')) {
+  document.getElementById('orderNum').value = params.get('order');
+  document.getElementById('orderEmail').value = params.get('email') || '';
+  trackOrder();
+}
+
+async function trackOrder() {
+  const num = document.getElementById('orderNum').value.trim();
+  const email = document.getElementById('orderEmail').value.trim();
+  if (!num || !email) return;
+
+  document.getElementById('errorMsg').classList.remove('show');
+  document.getElementById('result').classList.remove('show');
+
+  try {
+    const res = await fetch('/api/track-order', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({order_number:num, email})
+    });
+    if (!res.ok) { document.getElementById('errorMsg').classList.add('show'); return; }
+    const data = await res.json();
+    showResult(data);
+  } catch(e) {
+    document.getElementById('errorMsg').classList.add('show');
+  }
+}
+
+function showResult(data) {
+  const {order, items} = data;
+  document.getElementById('resOrderNum').textContent = order.order_number;
+  document.getElementById('resName').textContent = order.user_name;
+  document.getElementById('resDate').textContent = new Date(order.created_at).toLocaleDateString('en-PK',{year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('resDelivery').textContent = order.estimated_delivery || 'TBD';
+  document.getElementById('resTotal').textContent = 'Rs ' + parseInt(order.total_amount).toLocaleString();
+
+  const badge = document.getElementById('resBadge');
+  badge.textContent = order.status;
+  badge.className = 'status-badge status-' + order.status;
+
+  // Steps
+  const statusOrder = ['Pending','Processing','Shipped','Delivered'];
+  const idx = statusOrder.indexOf(order.status);
+  for (let i=0;i<4;i++) {
+    const dot = document.getElementById('dot'+i);
+    dot.className = 'step-dot' + (i<idx?' done': i===idx?' active':'');
+    if (i<3) {
+      const conn = document.getElementById('conn'+i);
+      conn.className = 'step-connector' + (i<idx?' done':'');
+    }
+  }
+
+  const icons = ['📋','⚙️','🚚','🏠'];
+  for (let i=0;i<=idx;i++) document.getElementById('dot'+i).textContent = i<idx?'✓':icons[i];
+
+  const itemsEl = document.getElementById('orderItems');
+  itemsEl.innerHTML = (items||[]).map(item=>`
+    <div class="order-item">
+      <span>${item.product_name} ${item.selected_size?'('+item.selected_size+')':''}</span>
+      <span style="font-weight:500;color:var(--rose)">Rs ${parseInt(item.unit_price).toLocaleString()}</span>
+    </div>`).join('') || '<div style="color:var(--text-light);font-size:13px">No item details available.</div>';
+
+  document.getElementById('result').classList.add('show');
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
